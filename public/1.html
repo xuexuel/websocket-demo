@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <textarea name="text" id="textarea" cols="30" rows="10"></textarea>
+  <input type="text" id="content">
+  <button id="btn">发送</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    let textarea = document.querySelector('#textarea');
+    let content = document.querySelector('#content');
+    let btn = document.querySelector('#btn');
+
+    const socket = io('/');
+    socket.on('hello', data => {
+      console.log(data);
+      writeData(data);
+    })
+    socket.on('message', data => {
+      writeData(data);
+    })
+    socket.on('userUpdate', data => {
+      writeData(data);
+    })
+
+    btn.onclick = function () {
+      socket.emit('message', content.value);
+      writeData('我说：' + content.value);
+      content.value = "";
+      content.focus();
+    }
+
+    function writeData(data) {
+      textarea.innerHTML += data + '\r\n';
+
+    }
+  </script>
+</body>
+
+</html>
